@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+  <title>Thymeleafexamples - Spring security</title>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="css/main.css" th:href="@{/css/main.css}" />
+</head>
+<body>
+<div th:fragment="logout" class="logout"
+     sec:authorize="isAuthenticated()">
+
+  Logged user: <span sec:authentication="name">Bob</span> |
+  Roles: <span sec:authentication="authorities">[ROLE_USER, ROLE_ADMIN]</span> |
+  <a href="index.html" th:href="@{/j_spring_security_logout}">Logout</a>
+</div>
+<h1>Home Page</h1>
+<p>This page is for any authenticated user.</p>
+<ul>
+  <li>Go to <a href="/" th:href="@{/}">home</a> (both users and admins)</li>
+  <li sec:authorize="hasRole('ADMIN')">Go to <a href="admin" th:href="@{/admin}">administration zone</a> (only admins)</li>
+</ul>
+</body>
+</html>
