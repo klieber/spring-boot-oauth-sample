@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @SpringBootApplication
 @EnableResourceServer
 public class RestApiApplication extends WebMvcConfigurerAdapter {
-  
+
 	public static void main(String[] args) {
 		SpringApplication.run(RestApiApplication.class, args);
 	}

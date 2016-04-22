@@ -105,6 +105,8 @@ public class AuthServerApplication extends WebMvcConfigurerAdapter {
 					.withClient("webapp")
 					.secret("secret")
 					.authorizedGrantTypes("authorization_code", "refresh_token", "password")
+          .accessTokenValiditySeconds(30)
+          .refreshTokenValiditySeconds(120)
           .scopes("read","write")
           .autoApprove("read","write")
           .autoApprove(true);

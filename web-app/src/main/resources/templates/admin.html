@@ -3,7 +3,6 @@
 <head>
   <title>Thymeleafexamples - Spring security</title>
   <meta charset="utf-8" />
-  <link rel="stylesheet" href="css/main.css" th:href="@{/css/main.css}" />
 </head>
 <body>
 <div th:fragment="logout" class="logout"
@@ -13,6 +12,7 @@
   <a href="index.html" th:href="@{/j_spring_security_logout}">Logout</a>
 </div>
 <h1>Admin Page</h1>
+<p>Hello, <span th:text="${user.firstName + ' ' +user.lastName}"></span></p>
 <p>This page is for admins only.</p>
 <ul>
   <li>Go to <a href="/" th:href="@{/}">home</a> (both users and admins)</li>
