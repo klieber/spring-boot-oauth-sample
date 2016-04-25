@@ -5,10 +5,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configurers.GlobalAuthenticationConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -40,7 +42,7 @@ public class AuthServerApplication extends WebMvcConfigurerAdapter {
 	public Principal user(Principal user) {
 		return user;
 	}
-  
+
   @Override
 	public void addViewControllers(ViewControllerRegistry registry) {
 		registry.addViewController("/login").setViewName("login");
@@ -51,10 +53,25 @@ public class AuthServerApplication extends WebMvcConfigurerAdapter {
 		SpringApplication.run(AuthServerApplication.class, args);
 	}
 
+  @Order(Ordered.HIGHEST_PRECEDENCE)
+  @Configuration
+  protected static class AuthenticationSecurity extends GlobalAuthenticationConfigurerAdapter {
+
+    @Override
+    public void init(AuthenticationManagerBuilder auth) throws Exception {
+      // @formatter:off
+      auth.inMemoryAuthentication()
+        .withUser("user").password("user").authorities("ROLE_USER")
+        .and()
+        .withUser("admin").password("admin").authorities("ROLE_USER", "ROLE_ADMIN");
+      // @formatter:on
+    }
+  }
+
 	@Configuration
 	@Order(-20)
 	protected static class LoginConfig extends WebSecurityConfigurerAdapter {
-    
+
     @Autowired
     @SuppressWarnings("SpringJavaAutowiringInspection")
 		private AuthenticationManager authenticationManager;
@@ -73,12 +90,6 @@ public class AuthServerApplication extends WebMvcConfigurerAdapter {
 
 		@Override
 		protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-      // @formatter:off
-      auth.inMemoryAuthentication()
-          .withUser("user").password("user").authorities("ROLE_USER")
-          .and()
-          .withUser("admin").password("admin").authorities("ROLE_USER", "ROLE_ADMIN");
-      // @formatter:on
 			auth.parentAuthenticationManager(authenticationManager);
 		}
 	}
@@ -105,8 +116,8 @@ public class AuthServerApplication extends WebMvcConfigurerAdapter {
 					.withClient("webapp")
 					.secret("secret")
 					.authorizedGrantTypes("authorization_code", "refresh_token", "password")
-          .accessTokenValiditySeconds(30)
-          .refreshTokenValiditySeconds(120)
+          .accessTokenValiditySeconds(15)
+          .refreshTokenValiditySeconds(14400)
           .scopes("read","write")
           .autoApprove("read","write")
           .autoApprove(true);
