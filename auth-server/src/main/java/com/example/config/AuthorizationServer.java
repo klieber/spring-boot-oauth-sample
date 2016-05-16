@@ -37,7 +37,7 @@ public class AuthorizationServer extends AuthorizationServerConfigurerAdapter {
       .withClient("webapp")
       .secret("secret")
       .authorizedGrantTypes("authorization_code", "refresh_token", "password")
-      .accessTokenValiditySeconds(15)
+      .accessTokenValiditySeconds(14400)
       .refreshTokenValiditySeconds(14400)
       .scopes("read","write")
       .autoApprove("read","write")
